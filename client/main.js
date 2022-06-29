@@ -27,19 +27,19 @@ async function main(name)
 
     function add_message(message)
     {
-        const {type, value, user} = message;
+        const {type, value, user, date} = message;
         const my_message = user.id == id
 
         switch(type) 
         {
             case 'connected':
-                console_element.innerHTML += `<p><span style='color:${my_message?'#F0F':'#0F0'}'>${user.name} connected</p>`
+                console_element.innerHTML += `<p><span style='color:#FAC'>${date}</span> <span style='color:${my_message?'#F0F':'#0F0'}'>${user.name} connected</p>`
                 break;
             case 'message':
-                console_element.innerHTML += `<p><span style='color:${my_message?'#FF0':'#0FF'}'>${user.name}:</span> ${value}</p>`
+                console_element.innerHTML += `<p><span style='color:#FAC'>${date}</span> <span style='color:${my_message?'#FF0':'#0FF'}'>${user.name}:</span> ${value}</p>`
                 break;
             case 'disconnected':
-                console_element.innerHTML += `<p><span style='color:${my_message?'#FF0':'#0F0'}'>${user.name} disconnected</p>`
+                console_element.innerHTML += `<p><span style='color:#FAC'>${date}</span> <span style='color:${my_message?'#FF0':'#0F0'}'>${user.name} disconnected</p>`
                 break;
             case 'config':
                 id = user.id;
@@ -55,7 +55,6 @@ async function main(name)
     ws.onclose = () => {
         register_box_container.style.display = 'block';
         register_input.addEventListener('keydown', register)
-        console_element.innerHTML += '<p><span style="color:#F00">Connection closed</span></p>';
     }
     
     chat_input.addEventListener('keydown', (e) => {

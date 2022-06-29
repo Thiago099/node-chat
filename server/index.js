@@ -28,8 +28,12 @@ const get_parameters = (req) => {
 const history = []
 function send(message)
 {
-    history.push(message);
-    broadcast(echoWss, JSON.stringify(message));
+    const message_with_date = {
+        ...message,
+        date: new Date().toLocaleString()
+    }
+    history.push(message_with_date);
+    broadcast(echoWss, JSON.stringify(message_with_date));
 }
 
 app.get('/history', (req, res) => {
@@ -43,7 +47,6 @@ app.ws('/chat', (ws, req) => {
     const {name} = get_parameters(req)
     const id = last_id++;
     const user = {id, name};
-    // get connection id
     ws.send(JSON.stringify({type:"config",user}))
     send({type:"connected",user})
     ws.on('message', (msg) => {
