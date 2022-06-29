@@ -8,8 +8,8 @@ var ws = new WebSocket("ws://localhost:3001/chat?name="+name);
 // connect to websocket
 // receive message from server
 ws.onmessage = evt => {
-    const {type, value,target} = JSON.parse(evt.data)
-    if(target == name) 
+    const {type, value, user} = JSON.parse(evt.data)
+    if(user == name) 
     {
         if(type == 'message'){
             console.innerHTML += '<p><span style="color:#FF0">You:</span> '+value+'</p>';
@@ -19,13 +19,13 @@ ws.onmessage = evt => {
     {
         switch(type) {
             case 'connected':
-                console.innerHTML += `<p><span style='color:#0F0'>${value} connected</p>`
+                console.innerHTML += `<p><span style='color:#0F0'>${user} connected</p>`
                 break;
             case 'message':
-                console.innerHTML += `<p><span style='color:#0FF'>${target}:</span> ${value}</p>`
+                console.innerHTML += `<p><span style='color:#0FF'>${user}:</span> ${value}</p>`
                 break;
             case 'disconnected':
-                console.innerHTML += `<p><span style='color:#F00'>${value} disconnected</p>`
+                console.innerHTML += `<p><span style='color:#F00'>${user} disconnected</p>`
                 break;
         }
     }

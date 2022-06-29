@@ -32,13 +32,13 @@ const get_parameters = (req) => {
 app.ws('/chat', (ws, req) => {
     // get url parameters
     const {name} = get_parameters(req)
-    broadcast(echoWss, JSON.stringify({type:"connected",target:name,value:name}))
+    broadcast(echoWss, JSON.stringify({type:"connected",user:name}))
     ws.on('message', (msg) => {
         // ws.send(msg);
-        broadcast(echoWss, JSON.stringify({type:"message",target:name,value:msg}));
+        broadcast(echoWss, JSON.stringify({type:"message",user:name,value:msg}));
     });
     ws.on('close', ()=>{
-        broadcast(echoWss, JSON.stringify({type:"disconnected",target:name,value:name}))
+        broadcast(echoWss, JSON.stringify({type:"disconnected",user:name}))
     })
 })
 
