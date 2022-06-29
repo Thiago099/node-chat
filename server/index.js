@@ -34,13 +34,13 @@ app.ws('/chat', (ws, req) => {
     // get url parameters
     const {name} = get_parameters(req)
     connections.push(name)
-    broadcast(echoWss, JSON.stringify({type:"connected",value:name}))
+    broadcast(echoWss, JSON.stringify({type:"connected",target:name,value:name}))
     ws.on('message', (msg) => {
         // ws.send(msg);
-        broadcast(echoWss, JSON.stringify({type:"message",value:msg}));
+        broadcast(echoWss, JSON.stringify({type:"message",target:name,value:msg}));
     });
     ws.on('close', ()=>{
-        broadcast(echoWss, JSON.stringify({type:"disconnected",value:name}))
+        broadcast(echoWss, JSON.stringify({type:"disconnected",target:name,value:name}))
     })
 })
 
