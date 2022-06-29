@@ -29,14 +29,19 @@ const get_parameters = (req) => {
     }
     return {}
 }
-
+const connections = []
 app.ws('/echo', (ws, req) => {
     // get url parameters
-    console.log(get_parameters(req))
+    const {name} = get_parameters(req)
+    connections.push(name)
+    broadcast(echoWss, JSON.stringify({type:"connected",value:name}))
     ws.on('message', (msg) => {
         // ws.send(msg);
-        broadcast(echoWss, msg);
+        broadcast(echoWss, JSON.stringify({type:"message",value:msg}));
     });
+    ws.on('close', ()=>{
+        broadcast(echoWss, JSON.stringify({type:"disconnected",value:name}))
+    })
 })
 
 const port = 3001

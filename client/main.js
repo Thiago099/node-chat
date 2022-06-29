@@ -1,18 +1,31 @@
 import './style.css'
 const console = document.querySelector('#console')
-var ws = new WebSocket("ws://localhost:3001/echo?id=0");
+
+var name = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+var ws = new WebSocket("ws://localhost:3001/echo?name="+name);
 // connect to websocket
 // receive message from server
 ws.onmessage = evt => {
-    console.innerHTML += "<span style='color:#0FF'>"+ evt.data + '</span><br>';
+    const {type, value} = JSON.parse(evt.data)
+    switch(type) {
+        case 'connected':
+            console.innerHTML += `<p><span style='color:#0F0'>${value} connected</p>`
+            break;
+        case 'message':
+            console.innerHTML += `<p><span style='color:#0FF'>${value}</p>`
+            break;
+        case 'disconnected':
+            console.innerHTML += `<p><span style='color:#F00'>${value} disconnected</p>`
+            break;
+    }
 };
 ws.onopen = () => {
-    console.innerHTML += '<span style="color:#0F0">connected</span><br>';
+    console.innerHTML += '<p><span style="color:#0F0">connected</span></p>';
 }
 ws.onclose = () => {
-    console.innerHTML += '<span style="color:#F00">Connection closed</span><br>';
+    console.innerHTML += '<p><span style="color:#F00">Connection closed</span></p>';
 }
-var str = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 setInterval(() => {
-    ws.send(str);
+    ws.send(name);
 }, 1000);
