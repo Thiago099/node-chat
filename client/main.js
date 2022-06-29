@@ -1,46 +1,68 @@
 import './style.css'
-const console = document.querySelector('#console')
+const console_element = document.querySelector('#console')
 const chat_input = document.querySelector('#chat-input')
+const register_box_container = document.querySelector('#register-box-container')
+const register_input = document.querySelector('#register-input')
 
-var name = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+import axios from 'axios'
 
-var ws = new WebSocket("ws://localhost:3001/chat?name="+name);
-// connect to websocket
-// receive message from server
-ws.onmessage = evt => {
-    const {type, value, user} = JSON.parse(evt.data)
-    if(user == name) 
-    {
-        if(type == 'message'){
-            console.innerHTML += '<p><span style="color:#FF0">You:</span> '+value+'</p>';
-        }
+register_input.addEventListener('keydown', register)
+    
+function register(e) {
+    if(e.keyCode == 13) {
+        register_input.removeEventListener('keydown', register)
+        register_box_container.style.display = 'none';
+        main(register_input.value)
     }
-    else
+}
+async function main(name)
+{
+
+    const history = (await axios.get('http://localhost:3001/history')).data;
+    for(const item of history) {
+        add_message(item);
+    }
+    var id = 0;
+    var ws = new WebSocket("ws://localhost:3001/chat?name="+name);
+
+    function add_message(message)
     {
-        switch(type) {
+        const {type, value, user} = message;
+        const my_message = user.id == id
+
+        switch(type) 
+        {
             case 'connected':
-                console.innerHTML += `<p><span style='color:#0F0'>${user} connected</p>`
+                console_element.innerHTML += `<p><span style='color:${my_message?'#F0F':'#0F0'}'>${user.name} connected</p>`
                 break;
             case 'message':
-                console.innerHTML += `<p><span style='color:#0FF'>${user}:</span> ${value}</p>`
+                console_element.innerHTML += `<p><span style='color:${my_message?'#FF0':'#0FF'}'>${user.name}:</span> ${value}</p>`
                 break;
             case 'disconnected':
-                console.innerHTML += `<p><span style='color:#F00'>${user} disconnected</p>`
+                console_element.innerHTML += `<p><span style='color:${my_message?'#FF0':'#0F0'}'>${user.name} disconnected</p>`
                 break;
+            case 'config':
+                id = user.id;
+                break
         }
+        console_element.scrollTo(0, console_element.scrollHeight);
     }
-    console.scrollTo(0, console.scrollHeight);
-};
-ws.onopen = () => {
-    console.innerHTML += '<p><span style="color:#0F0">connected</span></p>';
-}
-ws.onclose = () => {
-    console.innerHTML += '<p><span style="color:#F00">Connection closed</span></p>';
+    ws.onmessage = evt => {
+        add_message(JSON.parse(evt.data))
+    };
+    // ws.onopen = () => {
+    // }
+    ws.onclose = () => {
+        register_box_container.style.display = 'block';
+        register_input.addEventListener('keydown', register)
+        console_element.innerHTML += '<p><span style="color:#F00">Connection closed</span></p>';
+    }
+    
+    chat_input.addEventListener('keydown', (e) => {
+        if(e.keyCode == 13) {
+            ws.send(chat_input.value);
+            chat_input.value = '';
+        }
+    });
 }
 
-chat_input.addEventListener('keydown', (e) => {
-    if(e.keyCode == 13) {
-        ws.send(chat_input.value);
-        chat_input.value = '';
-    }
-});

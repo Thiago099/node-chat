@@ -1,10 +1,6 @@
 const app = require('express')();
 expressWs = require('express-ws')(app);
-
-//REST endpoint
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
+app.use(require('cors')())
 
 var echoWss = expressWs.getWss('/chat');
 
@@ -29,16 +25,36 @@ const get_parameters = (req) => {
     }
     return {}
 }
+const history = []
+function send(message)
+{
+    history.push(message);
+    broadcast(echoWss, JSON.stringify(message));
+}
+
+app.get('/history', (req, res) => {
+    res.send(JSON.stringify(history));
+});
+
+
+let last_id = 1;
 app.ws('/chat', (ws, req) => {
     // get url parameters
     const {name} = get_parameters(req)
-    broadcast(echoWss, JSON.stringify({type:"connected",user:name}))
+    const id = last_id++;
+    const user = {id, name};
+    // get connection id
+    ws.send(JSON.stringify({type:"config",user}))
+    send({type:"connected",user})
     ws.on('message', (msg) => {
         // ws.send(msg);
-        broadcast(echoWss, JSON.stringify({type:"message",user:name,value:msg}));
+        if(msg != '')
+        {
+            send({type:"message",user,value:msg})
+        }
     });
     ws.on('close', ()=>{
-        broadcast(echoWss, JSON.stringify({type:"disconnected",user:name}))
+        send({type:"disconnected",user})
     })
 })
 

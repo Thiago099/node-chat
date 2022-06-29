@@ -32,3 +32,24 @@ body{
   outline: none;
   padding: 5px;
 }
+
+#register-box-container{
+  position:absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(68, 67, 67);
+  
+}
+#register-input{
+  font-size: 20px;
+  font-family: monospace;
+  color: #fff;
+  background-color: #000;
+  width: 500px;
+  height: 50px;
+  text-align: center;
+  outline: none;
+}
