@@ -6,7 +6,7 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-var echoWss = expressWs.getWss('/echo');
+var echoWss = expressWs.getWss('/chat');
 
 const broadcast = (wss, message) => {
     wss.clients.forEach((client) => {
@@ -30,7 +30,7 @@ const get_parameters = (req) => {
     return {}
 }
 const connections = []
-app.ws('/echo', (ws, req) => {
+app.ws('/chat', (ws, req) => {
     // get url parameters
     const {name} = get_parameters(req)
     connections.push(name)

@@ -3,7 +3,7 @@ const console = document.querySelector('#console')
 
 var name = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
-var ws = new WebSocket("ws://localhost:3001/echo?name="+name);
+var ws = new WebSocket("ws://localhost:3001/chat?name="+name);
 // connect to websocket
 // receive message from server
 ws.onmessage = evt => {
