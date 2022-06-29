@@ -1,0 +1,21 @@
+
+
+<script>
+    var ws = new WebSocket("ws://localhost:3000/echo");
+    // connect to websocket
+    // receive message from server
+    ws.onmessage = evt => {
+        document.write(evt.data + '<br>');
+    };
+    ws.onopen = () => {
+        document.write('connected<br>');
+    }
+    ws.onclose = () => {
+        document.write('Connection closed<br>');
+    }
+    var str = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    setInterval(() => {
+        ws.send(str);
+    }, 1000);
+    
+</script>
