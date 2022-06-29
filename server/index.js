@@ -29,11 +29,9 @@ const get_parameters = (req) => {
     }
     return {}
 }
-const connections = []
 app.ws('/chat', (ws, req) => {
     // get url parameters
     const {name} = get_parameters(req)
-    connections.push(name)
     broadcast(echoWss, JSON.stringify({type:"connected",target:name,value:name}))
     ws.on('message', (msg) => {
         // ws.send(msg);

@@ -12,7 +12,7 @@ ws.onmessage = evt => {
     if(target == name) 
     {
         if(type == 'message'){
-            console.innerHTML += '<p><span style="color:#FF0">'+value+'</span></p>';
+            console.innerHTML += '<p>You: <span style="color:#FF0">'+value+'</span></p>';
         }
     }
     else
