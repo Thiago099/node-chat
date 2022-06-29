@@ -29,6 +29,7 @@ ws.onmessage = evt => {
                 break;
         }
     }
+    console.scrollTo(0, console.scrollHeight);
 };
 ws.onopen = () => {
     console.innerHTML += '<p><span style="color:#0F0">connected</span></p>';
