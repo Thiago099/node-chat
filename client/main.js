@@ -12,7 +12,7 @@ ws.onmessage = evt => {
     if(target == name) 
     {
         if(type == 'message'){
-            console.innerHTML += '<p>You: <span style="color:#FF0">'+value+'</span></p>';
+            console.innerHTML += '<p><span style="color:#FF0">You:</span> '+value+'</p>';
         }
     }
     else
@@ -22,7 +22,7 @@ ws.onmessage = evt => {
                 console.innerHTML += `<p><span style='color:#0F0'>${value} connected</p>`
                 break;
             case 'message':
-                console.innerHTML += `<p>${target}: <span style='color:#0FF'>${value}</p>`
+                console.innerHTML += `<p><span style='color:#0FF'>${target}:</span> ${value}</p>`
                 break;
             case 'disconnected':
                 console.innerHTML += `<p><span style='color:#F00'>${value} disconnected</p>`
