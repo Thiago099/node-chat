@@ -39,7 +39,7 @@ async function main(name)
                 console_element.innerHTML += `<p><span style='color:#FAC'>${date}</span> <span style='color:${my_message?'#FF0':'#0FF'}'>${user.name}:</span> ${value}</p>`
                 break;
             case 'disconnected':
-                console_element.innerHTML += `<p><span style='color:#FAC'>${date}</span> <span style='color:${my_message?'#FF0':'#0F0'}'>${user.name} disconnected</p>`
+                console_element.innerHTML += `<p><span style='color:#FAC'>${date}</span> <span style='color:${my_message?'#FF0':'#F00'}'>${user.name} disconnected</p>`
                 break;
             case 'config':
                 id = user.id;
