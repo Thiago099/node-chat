@@ -3,7 +3,7 @@ const console_element = document.querySelector('#console')
 const chat_input = document.querySelector('#chat-input')
 const register_box_container = document.querySelector('#register-box-container')
 const register_input = document.querySelector('#register-input')
-
+const server = location.host.split(':')[0]+':3001'
 import axios from 'axios'
 
 register_input.addEventListener('keydown', register)
@@ -18,12 +18,12 @@ function register(e) {
 async function main(name)
 {
 
-    const history = (await axios.get('http://localhost:3001/history')).data;
+    const history = (await axios.get('http://'+server+'/history')).data;
     for(const item of history) {
         add_message(item);
     }
     var id = 0;
-    var ws = new WebSocket("ws://localhost:3001/chat?name="+name);
+    var ws = new WebSocket("ws://"+server+"/chat?name="+name);
 
     function add_message(message)
     {
@@ -39,7 +39,7 @@ async function main(name)
                 console_element.innerHTML += `<p><span style='color:#FAC'>${date}</span> <span style='color:${my_message?'#FF0':'#0FF'}'>${user.name}:</span> ${value}</p>`
                 break;
             case 'disconnected':
-                console_element.innerHTML += `<p><span style='color:#FAC'>${date}</span> <span style='color:${my_message?'#FF0':'#0F0'}'>${user.name} disconnected</p>`
+                console_element.innerHTML += `<p><span style='color:#FAC'>${date}</span> <span style='color:${my_message?'#FF0':'#F00'}'>${user.name} disconnected</p>`
                 break;
             case 'config':
                 id = user.id;
